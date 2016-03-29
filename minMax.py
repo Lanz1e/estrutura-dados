@@ -7,9 +7,6 @@ def min_max(seq):
     Retorna tupla cujo primeiro valor mínimo (min) é o valor
     mínimo da sequencia seq.
     O segundo é o valor máximo (max) da sequencia
-    Complexidade
-    Tempo: O(n)
-    Espaço: O(n)
     '''
     return min(seq), max(seq)
 
