@@ -18,12 +18,12 @@ class Noh:
             altura=1
             while self.raiz.filhos:
                 self.raiz=self.raiz.filhos[0]
-                altura+=1
+                altura=altura+1
             return altura
         return 0
 
     def __iter__(self):
-        if self.raiz==None:
+        if self.raiz is None:
             return self.raiz
 
         pilha=[]
@@ -31,12 +31,12 @@ class Noh:
 
         while pilha:
             noh=pilha.pop(0)
-            if noh.pai==None:
+            if noh.pai is None:
                 yield noh.valor
 
-            for i in noh.filhos:
-                i.pai=None
-                pilha.append(i)
+            for k in noh.filhos:
+                k.pai=None
+                pilha.append(k)
 
 from unittest.case import TestCase
 
