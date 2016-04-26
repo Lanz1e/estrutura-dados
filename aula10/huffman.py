@@ -5,19 +5,35 @@ def calcular_frequencias(s):
     return freqs
 
 def gerar_arvore_de_huffman(s):
+    dicionario=calcular_frequencias(s)
+    for a,b in dicionario.items():
+        char=a
+        menor=b
+        break
+    for a,b in dicionario.items():
+        if b<=menor:
+            menor=b
+            char=a
+    dicionario.__delitem__(char)
+    arvore=Arvore(char,menor)
+    while len(dicionario.keys())>0:
+        for a,b in dicionario.items():
+            char=a
+            menor=b
+            break
+        for a,b in dicionario.items():
+            if b<=menor:
+                char=a
+                menor=b
+        arvore=arvore.fundir(Arvore(char,menor))
+        dicionario.__delitem__(char)
+    return arvore
 
-
-    pass
-
-
-def codificar(cod_dict, s):
-
-    pass
-
-def decodificar(arvore, s):
-
-    pass
-
+def codificar(cod_dict,s):
+    final=""
+    for k in s:
+        final=final+cod_dict.get(k)
+    return final
 
 class Noh:
     def __hash__(self):
@@ -28,6 +44,13 @@ class Noh:
             return False
         return self.peso == other.peso and self.esquerdo == other.esquerdo and self.direito == other.direito
 
+    def __init__(self, peso, esquerdo = None, direito = None):
+        self.peso = peso
+        self.esquerdo = esquerdo
+        self.direito = direito
+
+    def sou(self):
+        return "noh"
 
 class Folha():
     def __hash__(self):
@@ -38,16 +61,14 @@ class Folha():
             return False
         return self.__dict__ == other.__dict__
 
+    def __init__(self,char,peso):
+        self.char=char
+        self.peso=peso
+
+    def sou(self):
+        return "folha"
 
 class Arvore(object):
-    def __init__(self,esquerdo=None,direito=None,raiz=None):
-        self.esquerdo=esquerdo
-        self.direito=direito
-        self.raiz=raiz
-    def filho(self):
-        return self.esquerdo,self.direito
-
-
     def __hash__(self):
         return hash(self.raiz)
 
@@ -56,7 +77,65 @@ class Arvore(object):
             return False
         return self.raiz == other.raiz
 
+    def __init__(self,char=None,peso=None):
+        self.dic={}
+        if char==None:
+            self.raiz=None
+        else:
+            self.raiz=Folha(char,peso)
 
+    def decodificar(self,s):
+        letras = []
+        atual = self.raiz
+
+        if isinstance(atual, Folha):
+            return atual.char
+        else:
+            for i in s:
+                if i == '0':
+                    atual = atual.esquerdo
+                else:
+                    atual = atual.direito
+
+                if isinstance(atual, Folha):
+                    letras.append(atual.char)
+                    atual = self.raiz
+
+        return ''.join(letras)
+
+    def fundir(self,arvore):
+        NovaArvore=Arvore()
+        NovaArvore.raiz=Noh(self.raiz.peso+arvore.raiz.peso)
+        if self.raiz.peso > arvore.raiz.peso:
+            NovaArvore.raiz.esquerdo=self.raiz
+            NovaArvore.raiz.direito=arvore.raiz
+        else:
+            NovaArvore.raiz.direito=self.raiz
+            NovaArvore.raiz.esquerdo=arvore.raiz
+        return NovaArvore
+
+    def cod_dict(self):
+        dic = {}
+        caminho = []
+        visitar = []
+
+        visitar.append(self.raiz)
+
+        while len(visitar) != 0:
+            atual = visitar.pop()
+
+            if isinstance(atual, Folha):
+                letra = atual.char
+                dic[letra] = ''.join(caminho)
+                caminho.pop()
+                caminho.append('1')
+            else:
+                visitar.append(atual.direito)
+                visitar.append(atual.esquerdo)
+                caminho.append('0')
+        return dic
+
+import unittest
 from unittest import TestCase
 
 
