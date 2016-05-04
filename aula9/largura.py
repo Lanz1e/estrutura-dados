@@ -28,14 +28,14 @@ class Arvore:
         if self.raiz!=None:
             yield self.raiz.valor
             sequencia=self.raiz.filhos
-            end=True
-            while end:
+            final=True
+            while final:
                 end=False
                 sequencia2=[]
                 for i in sequencia:
                     yield i.valor
                     if i.filho_esquerdo!=None:
-                        end=True
+                        final=True
                     for k in i.filhos:
                         sequencia2.append(k)
                 sequencia=sequencia2
