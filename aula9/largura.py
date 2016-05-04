@@ -1,43 +1,54 @@
-class Arvore:
-    def __init__(self,raiz=None):
-        self.raiz=raiz
-
 class Noh:
     def __init__(self,valor,pai=None):
         self.valor=valor
         self.pai=pai
-        self.filhos=[]
-        if pai:
+        if pai!=None:
+            pai.filho_esquerdo=self
             pai.filhos.append(self)
-    def adicionar(self, filho):
+        self.filho_esquerdo=None
+        self.irmao_direito=None
+        self.filhos=[]
+
+    def adicionar(self,filho):
         filho.pai=self
+        if len(self.filhos)==0:
+            self.filho_esquerdo=filho
+        else:
+            f=self.filho_esquerdo
+            while f.irmao_direito!=None:
+                f=f.irmao_direito
+            f.irmao_direito=filho
         self.filhos.append(filho)
 
-    def altura(self):
-        if self.raiz:
-            altura=1
-            while self.raiz.filhos:
-                self.raiz=self.raiz.filhos[0]
-                altura=altura+1
-            return altura
-        return 0
+class Arvore:
+    def __init__(self,raiz=None):
+        self.raiz=raiz
 
     def __iter__(self):
-        if self.raiz is None:
-            return self.raiz
+        if self.raiz!=None:
+            yield self.raiz.valor
+            sequencia=self.raiz.filhos
+            end=True
+            while end:
+                end=False
+                sequencia2=[]
+                for i in sequencia:
+                    yield i.valor
+                    if i.filho_esquerdo!=None:
+                        end=True
+                    for k in i.filhos:
+                        sequencia2.append(k)
+                sequencia=sequencia2
 
-        pilha=[]
-        pilha.append(self.raiz)
+    def altura(self):
+        k=0
+        ultimo=self.raiz
+        while ultimo!=None:
+            k+=1
+            ultimo=ultimo.filho_esquerdo
+        return k
 
-        while pilha:
-            noh=pilha.pop(0)
-            if noh.pai is None:
-                yield noh.valor
-
-            for k in noh.filhos:
-                k.pai=None
-                pilha.append(k)
-
+import unittest
 from unittest.case import TestCase
 
 
