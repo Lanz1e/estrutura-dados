@@ -1,52 +1,41 @@
 class Noh:
-    def __init__(self,valor,pai=None):
+    def __init__(self, valor, pai=None):
         self.valor=valor
         self.pai=pai
-        if pai!=None:
-            pai.filho_esquerdo=self
-            pai.filhos.append(self)
-        self.filho_esquerdo=None
-        self.irmao_direito=None
         self.filhos=[]
+        self.filho_esquerdo=None
+        if pai:
+            pai.filhos.append(self)
 
-    def adicionar(self,filho):
+    def adicionar(self, filho):
         filho.pai=self
-        if len(self.filhos)==0:
-            self.filho_esquerdo=filho
-        else:
-            f=self.filho_esquerdo
-            while f.irmao_direito!=None:
-                f=f.irmao_direito
-            f.irmao_direito=filho
         self.filhos.append(filho)
 
 class Arvore:
-    def __init__(self,raiz=None):
+    def __init__(self, raiz = None):
         self.raiz=raiz
 
-    def __iter__(self):
-        if self.raiz!=None:
-            yield self.raiz.valor
-            sequencia=self.raiz.filhos
-            final=True
-            while final:
-                end=False
-                sequencia2=[]
-                for i in sequencia:
-                    yield i.valor
-                    if i.filho_esquerdo!=None:
-                        final=True
-                    for k in i.filhos:
-                        sequencia2.append(k)
-                sequencia=sequencia2
-
     def altura(self):
-        k=0
-        ultimo=self.raiz
-        while ultimo!=None:
-            k+=1
-            ultimo=ultimo.filho_esquerdo
-        return k
+        if self.raiz:
+            altura = 1
+            while self.raiz.filhos:
+                self.raiz = self.raiz.filhos[0]
+                altura += 1
+            return altura
+        return 0
+
+    def __iter__(self):
+        if self.raiz==None:
+            return self.raiz
+        pilha=[]
+        pilha.append(self.raiz)
+        while pilha:
+            tet=pilha.pop(0)
+            if tet.pai==None:
+                yield tet.valor
+            for k in tet.filhos:
+                k.pai=None
+                pilha.append(k)
 
 import unittest
 from unittest.case import TestCase
