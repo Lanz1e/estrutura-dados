@@ -1,3 +1,5 @@
-Aqui estão disponíveis scripts em python utilizados para responder exercícios em aulas do professor Renzo!
+**PTBR**
+Aqui estão disponíveis scripts em python utilizados para responder exercícios em aulas de Estrutura de dados.
 
-Estrutura de dados, FATEC!
+**EN**
+Here you can find simple Python algorithms used for Data Structure classes.
